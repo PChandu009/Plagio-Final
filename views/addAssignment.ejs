@@ -1,0 +1,53 @@
+<div class="col-md-12">
+        <form class="form" id="newAssignmentForm">
+            <div class="jumbotron bg-red">
+            <h4><i class="fa fa-plus" aria-hidden="true"></i> New Assignment</h4><hr/>
+                <div class="addAssignmentBlock">
+                    <div class="dash-line"></div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>Assignment Name </strong>
+                        </label>
+                        <input type="text" class="form-control block" placeholder="name of the Assignment" class="inputAssignment" name="name">
+                        <input type="hidden" class="form-control" placeholder="name of the Assignment" class="inputAssignment" name="courseid" value="<%= courseid %>">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>&nbsp;</strong>
+                        </label>
+                        <p>
+                            <a class="btn btn-primary btn-md" id="addAssignment" href="#" role="button">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add New Assignment</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<script>
+$("#addAssignment").click(function (evt) {
+    evt.preventDefault();
+    var newAssignmentDetails = $("#newAssignmentForm").serializeFormJSON();
+    console.log(newAssignmentDetails);
+    $.ajax({
+        method: "POST",
+        url: "/newAssignment",
+        data: newAssignmentDetails
+    })
+        .done(function (data) {
+            if (data.success) {
+                console.log(data);
+                bootbox.alert(data.message, function () {
+                    location.href = "/assignments/<%= courseid %>";
+                });
+            }
+            else {
+                console.log(data);
+                if (data.data.errmsg && data.data.code == 11000)
+                    bootbox.alert({ title: data.message, message: "Screen name already exists" });
+                else
+                    bootbox.alert({ title: data.message, message: data.data.errmsg || data.data.message });
+            }
+        });
+    });
+</script>

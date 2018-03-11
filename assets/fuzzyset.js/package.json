@@ -1,0 +1,88 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "fuzzyset.js@latest",
+        "scope": null,
+        "escapedName": "fuzzyset.js",
+        "name": "fuzzyset.js",
+        "rawSpec": "latest",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "C:\\Plagio"
+    ]
+  ],
+  "_from": "fuzzyset.js@latest",
+  "_id": "fuzzyset.js@0.0.3",
+  "_inCache": true,
+  "_location": "/fuzzyset.js",
+  "_nodeVersion": "7.9.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/fuzzyset.js-0.0.3.tgz_1496351806922_0.9695050220470876"
+  },
+  "_npmUser": {
+    "name": "glench",
+    "email": "www@glench.com"
+  },
+  "_npmVersion": "4.2.0",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "fuzzyset.js@latest",
+    "scope": null,
+    "escapedName": "fuzzyset.js",
+    "name": "fuzzyset.js",
+    "rawSpec": "latest",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/fuzzyset.js/-/fuzzyset.js-0.0.3.tgz",
+  "_shasum": "8ba6c55a4e17a887fde266afe42422632d6f8d19",
+  "_shrinkwrap": null,
+  "_spec": "fuzzyset.js@latest",
+  "_where": "C:\\Plagio",
+  "author": {
+    "name": "Glen Chiacchieri",
+    "url": "http://glench.com/"
+  },
+  "bugs": {
+    "url": "https://github.com/Glench/fuzzyset.js/issues"
+  },
+  "dependencies": {},
+  "description": "A fuzzy string set for JavaScript",
+  "devDependencies": {
+    "should": "*"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "8ba6c55a4e17a887fde266afe42422632d6f8d19",
+    "tarball": "https://registry.npmjs.org/fuzzyset.js/-/fuzzyset.js-0.0.3.tgz"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "gitHead": "b40d18493faa78dc475e540c5ae5d12d7dccc905",
+  "homepage": "http://Glench.github.com/fuzzyset.js",
+  "main": "./index.js",
+  "maintainers": [
+    {
+      "name": "glench",
+      "email": "www@glench.com"
+    }
+  ],
+  "name": "fuzzyset.js",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Glench/fuzzyset.js.git"
+  },
+  "scripts": {
+    "test": ""
+  },
+  "version": "0.0.3"
+}

@@ -1,0 +1,41 @@
+<div class="center-50 jumbotron">
+<center><h2><i class="fa fa-user" aria-hidden="true"></i> Login</h2><div class="dash-line"></div></center>
+<form action="/login" id="lgnForm" class="form" data-parsley-validate method="POST">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" placeholder="username" name="username" data-parsley-trigger="change" required /><br/>
+    <label for="password">Password</label>
+    <input type="password" class="form-control" placeholder="password" name="password" required /><br/>
+    <input type="submit" class="btn btn-primary" id="lgn" value="Log in" />
+</form>
+
+<script>
+ //$('#lgnForm').parsley();
+//   $('#lgnForm').parsley().on('field:validated', function() {
+//     var ok = $('.parsley-error').length === 0;
+//     $('.bs-callout-info').toggleClass('hidden', !ok);
+//     $('.bs-callout-warning').toggleClass('hidden', ok);
+//   })
+//   .on('form:submit', function() {
+//     return true; // Don't submit form for this demo
+//   });
+
+    $("#lgnForm").submit(function(evt){
+        evt.preventDefault();
+        console.log($("#lgnForm").serializeFormJSON());
+        $.ajax({
+            method: "POST",
+            url: "/login",
+            data: $("#lgnForm").serializeFormJSON()
+            })
+            .done(function( data ) {
+                if ( data.success ) {
+                    console.log( "login data ", data );
+                    location.href = "/";
+                }
+                else{
+                    console.log( "login data ", data );
+                    alert(data.message);
+                }
+            });
+    });
+</script>

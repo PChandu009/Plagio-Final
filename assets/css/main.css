@@ -1,0 +1,58 @@
+html{
+    height: 100%;
+}
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+  overflow-x: hidden ;
+}
+.assignmentsList a{
+    text-decoration: none !important;
+}
+/*.navbar-default {
+    background-color: #ea0000;
+    border-color: #9e0000;
+    border-radius: 0px;
+}
+.navbar-default .navbar-brand {
+    color: #ffffff;
+}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+    color: #ffffff;
+    background-color: transparent;
+    font-weight: bold;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #ffffff;
+}*/
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color:#333338;
+    text-align: center;
+    color: #fff;
+}
+.fullBox{
+    width:100%;
+    min-height: 400px;
+}
+a.list-group-item.hdr-active {
+    background-color: #e7e7e7;
+}
+.clear{
+    clear:both;
+}
+.tgreen{
+    color: green;
+}
+.tred{
+    color: red;
+}
+.progress.plagper{
+    margin:0px;
+}

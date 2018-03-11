@@ -1,0 +1,217 @@
+<% 
+function highPlag(plags){
+    let max = 0;
+    for(let i=0; i<plags.length; i++){
+        if(plags[i].plags && plags[i].plags.max>max){
+            max = plags[i].plags.max;
+        }
+    }
+    return max;
+}
+names = {};
+(function generateNames(){
+   // console.log("AKK", assignment.files);
+    for(let i=0; i<assignment.files.length; i++){
+        names[assignment.files[i]._id] = assignment.files[i];
+    }
+})();
+%>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div class="pull-left">
+                <strong>Assignment: </strong><%= assignment.name %>
+            </div>
+            <div class="pull-right">
+                <strong>Course: </strong> <%= assignment.course.name %> <strong>CRN: </strong> <%= assignment.course.crn %> 
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="panel-body">
+        <label>Upload Assignment Files</label>
+        <div id="fileUpload" class="row">
+            <div class="col-md-6">
+                <input type="file" name="assignmentFiles" id="assignmentFiles" accept=".doc,.docx,.zip" class="form-control btn btn-info" />
+                <div class="progress" id="progressUpldFile">
+                    <div class="progress-bar" role="progressbar" id="prgUpldFile" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                    0%
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <a href="#" class="btn btn-warning" id="uploadFiles"><i class="fa fa-upload" aria-hidden="true"></i>&nbsp;&nbsp; Upload </a>
+            </div>
+        </div>
+        <hr/>
+        <div class="text-right">
+            <a href="#" class="btn btn-primary" id="checkPlag"><i class="fa fa-refresh" aria-hidden="true"></i> Check Plagiarism</a>
+        </div>
+        <hr/>
+        <h4>Files</h4>
+        <table class="table table-hover table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>File</th>
+                <th>Plagarism Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let i=0; i<assignment.files.length; i++) {
+                let plagPer = Math.round(highPlag(assignment.files[i].plags)*100)/100;
+                 %>
+                <tr>
+                    <td><%= assignment.files[i].name.split("_")[0] %></td>
+                    <td><a href="<%= assignment.files[i].path %>" ><%= assignment.files[i].name %></a></td>
+                    <td>
+                     <%= plagPer %>%
+                    <a data-toggle="collapse" href="#collapseExample_<%= assignment.files[i]._id %>" aria-expanded="false" aria-controls="collapseExample">
+                    <div class="progress plagper">  
+                        <div class="progress-bar <%= plagPer<=25?'progress-bar-success':'progress-bar-danger' %> progress-bar-striped" role="progressbar" aria-valuenow="<%= plagPer %>" aria-valuemin="0" aria-valuemax="100" style="width: <%= plagPer %>%;">
+                         
+                        </div>
+                    </div>
+                    </a>
+                    
+                    <strong>
+                    <a data-toggle="collapse" href="#collapseExample_<%= assignment.files[i]._id %>" aria-expanded="false" aria-controls="collapseExample">
+                    Details</a>
+                    </strong></td>
+                </tr>    
+                <tr>
+                    <td colspan="3">
+                        <div class="collapse" id="collapseExample_<%= assignment.files[i]._id %>">
+                            <div class="well">
+                                <table class="table table-bordered">
+                                <tr><td colspan="3" id="rcontent_<%= assignment.files[i]._id %>"><%= assignment.files[i].data.value %></td></tr>
+                                <% for(let k=0; k<assignment.files[i].plags.length; k++){
+                                    let wfile = names[assignment.files[i].plags[k].waid];
+                                     %>
+                                    <tr>
+                                        <td>
+                                            <%= wfile["name"].split("_")[0] %>
+                                        </td>
+                                        <td>
+                                            <%= Math.round(assignment.files[i].plags[k].plags.max*100)/100 %>
+                                        </td>
+                                        <td>
+                                        <a href="#" id="content_<%= assignment.files[i]._id %>" class="sPlagWords" >Show Plag Words</a>
+                                            <input type="hidden" value="<%= JSON.stringify(assignment.files[i].plags[k].plags.lev.plagwords.src) %>" >                                              
+                                        </td>
+                                    </tr>
+                                <% } %>
+                                 </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            <% } %>
+            <tr>
+                <td>Poorna Chandu</td>
+                <td>poorna_chandu_assignment01.docx</td>
+                <td><span class="tgreen"><strong>8%</strong></span></td>
+            </tr>
+            <tr>
+                <td>Alla Harsha</td>
+                <td>alla_harsha_assignment01.docx</td>
+                <td><span class="tred"><strong>15%</strong></span></td>
+            </tr>
+            <tr>
+                <td>Swetha Gudivaka</td>
+                <td>swetha_gudivaka_assignment01.docx</td>
+                <td><span class="tgreen"><strong>10%</strong></span></td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+</div>
+<script src="/js/jquery.highlight.js"></script>
+<script>
+    $(".sPlagWords").click(function(evt){
+        evt.preventDefault();
+        console.log(evt.currentTarget.nextSibling.nextSibling.defaultValue);
+        console.log("eid",evt.currentTarget.id);
+        
+        let k = evt.currentTarget.nextSibling.nextSibling.defaultValue;
+        k = k.replace(/\[+(?=)/g, "");
+        k = k.replace(/\]+(?=)/g, "");
+        k = k.replace(/\"+(?=)/g, "");
+       // console.log("trimmed k: ", k);
+        k = k.split(",");
+        $("#r"+evt.currentTarget.id).highlight(k);
+        $(".highlight").css({ backgroundColor: "#FFFF88" });
+        //console.log("array k: ", k);
+    });
+    $("#checkPlag").click(function(evt){
+        evt.preventDefault();
+         $.ajax({
+            type:'POST',
+            url: '/checkPlagarismOfAssignment/<%= assignment._id %>/2',
+            success: function(data){
+                console.log("plagdata", data);
+                alert("plagiarism %"+ data.plag);
+            }
+         });
+    });
+
+    $("#progressUpldFile")[0].style.display = "none";
+    $("#uploadFiles").click(function(evt){
+        evt.preventDefault();
+        var formData = new FormData();
+        formData.append('assignmentFiles', $("#assignmentFiles")[0].files[0]);
+        formData.append('assignmentId', "<%= assignment._id %>");
+
+        $("#progressUpldFile")[0].style.display = "block";
+        $.ajax({
+            type:'POST',
+            url: '/assignment/files',
+            data:formData,
+            xhr: function() {
+                    var myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload){
+                        myXhr.upload.addEventListener('progress',progress, false);
+                    }
+                    return myXhr;
+            },
+            cache:false,
+            contentType: false,
+            processData: false,
+
+            success:function(data){
+                console.log(data);
+                if(data.success){
+                    location.reload();
+                    $("#dspPic").val(data.data); 
+                }
+            },
+            error: function(data){
+                console.log(data);
+            }
+        });
+
+    });
+    function progress(e){
+
+    if(e.lengthComputable){
+        var max = e.total;
+        var current = e.loaded;
+
+        var Percentage = (current * 100)/max;
+        $("#prgUpldFile")[0].style.width = Percentage+"%";
+        $("#prgUpldFile").html(Percentage + "% Uploaded");
+        console.log(Percentage);
+
+
+        if(Percentage >= 100)
+        {
+           console.log("Upload Completed");
+        //    setTimeOut(function(){
+            $("#progressUpldFile")[0].style.display = "none";
+            $("#prgUpldFile")[0].style.width = "0%";
+            // process completed  
+        //    }, 2000);
+        }
+    }  
+ }  
+</script>

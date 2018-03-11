@@ -1,0 +1,68 @@
+<div class="col-md-12">
+        <form class="form" id="newCourseForm">
+            <div class="jumbotron bg-red">
+            <h4><i class="fa fa-plus" aria-hidden="true"></i> Add New Course</h4><hr/>
+                <div class="addCourseBlock">
+                    <div class="dash-line"></div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>Course CRN</strong>
+                        </label>
+                        <input type="text" class="form-control block" placeholder="course registration number" class="inputCourse" name="crn">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>Course Name </strong>
+                        </label>
+                        <input type="text" class="form-control block" placeholder="name of the course" class="inputCourse" name="name">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>Course Trisemster </strong>
+                        </label>
+                        <select class="form-control" name="trisemester">
+                            <option value="Fall">Fall</option>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">
+                            <strong>&nbsp;</strong>
+                        </label>
+                        <p>
+                            <a class="btn btn-primary btn-md" id="addCourse" href="#" role="button">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add New Course</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+<script>
+$("#addCourse").click(function (evt) {
+    evt.preventDefault();
+    var newScreenDetails = $("#newCourseForm").serializeFormJSON();
+    console.log(newScreenDetails);
+    $.ajax({
+        method: "POST",
+        url: "/newCourse",
+        data: newScreenDetails
+    })
+        .done(function (data) {
+            if (data.success) {
+                console.log(data);
+                bootbox.alert(data.message, function () {
+                    location.href = "/courses";
+                });
+            }
+            else {
+                console.log(data);
+                if (data.data.errmsg && data.data.code == 11000)
+                    bootbox.alert({ title: data.message, message: "Screen name already exists" });
+                else
+                    bootbox.alert({ title: data.message, message: data.data.errmsg || data.data.message });
+            }
+        });
+    });
+</script>

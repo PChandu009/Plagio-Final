@@ -1,0 +1,131 @@
+<%
+function getAssignments(courseid){
+  let assgns = [];
+  console.log("courseid", courseid);
+  //console.log("assignments", assignments);
+  for(let i=0; i<assignments.length; i++){
+    //console.log(courseid, assignments[i].courseid);
+    if(assignments[i].courseid.toString() == courseid.toString()){
+      //console.log("assgn", assignments[i]._id);
+      assgns.push(assignments[i]);
+    }
+  }
+  return assgns;
+} 
+function getFiles(assignmentid){
+  let fls = [];
+  console.log("assignmentid", assignmentid);
+  //console.log("assignments", assignments);
+  for(let i=0; i<files.length; i++){
+    //console.log(assignmentid, assignments[i].assignmentid);
+    if(files[i].assignmentid.toString() == assignmentid.toString()){
+      //console.log("assgn", assignments[i]._id);
+      fls.push(files[i]);
+    }
+  }
+  return fls;
+} 
+%>
+<script>
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+    console.log("drag",ev);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    console.log("drop", ev.target.id);
+    var data = ev.dataTransfer.getData("text");
+    console.log(data);
+    
+    $.ajax({
+      url: "/filedata/"+data,
+      method: "GET",
+      success: function(res){
+        console.log(res);
+        if(res.success){
+          $("#"+ev.target.id).val(res.data);
+        }else{
+          bootbox.alert("Something went wrong :(");
+        }
+      }
+    })
+    // ev.target.appendChild(document.getElementById(data));
+}
+</script>
+<link rel="stylesheet" type="text/css" href="/css/_styles.css" media="screen">
+<div class="row">
+<% if(user) { %>
+<div class="col-md-3">
+<h3>Drag File to select</h3>
+  <ol class="tree">
+      <li>
+      <% for(let i=0; i<courses.length; i++) { %>
+          <label for="<%= courses[i]._id %>"><%= courses[i].name %></label> <input type="checkbox" id="<%= courses[i]._id %>" /> 
+          <% let assgns = getAssignments(courses[i]._id) %>
+          <ol>
+          <li>
+            <% for(let j=0; j<assgns.length; j++) { %>
+              <label for="<%= assgns[j]._id %>"><%= assgns[j].name %></label> <input type="checkbox" id="<%= assgns[j]._id %>" /> 
+              <% let flss = getFiles(assgns[j]._id) %>
+              <ol>
+              <% for(let k=0; k<flss.length; k++) { %>
+                <li class="file">
+                  <a href="<%= flss[k].path %>" id="<%= flss[k]._id %>" ondragstart="drag(event)" draggable="true"><%= files[k].name.split("_")[0] %></a>
+                </li>
+              <% } %>      
+              </ol>
+            <% } %>      
+            </li>
+          </ol>
+      <% } %>
+      </li>
+  </ol>
+</div>
+<% } %>
+<% if(!user) { %>
+<div class="col-md-6">
+<% } else { %>
+<div class="col-md-5">
+<% } %>
+<h3>Comparing</h3>
+<textarea class="fullBox form-control" ondrop="drop(event)" ondragover="allowDrop(event)" id="src1">
+Amarendra Baahubali(Prabhas) and Bhalla Deva(Rana Daggubati) are cousins raised by the same mother, Sivagami(Ramya Krishnan) who is also the reigning Queen of Mahishmati.</textarea>
+</div>
+<% if(!user) { %>
+<div class="col-md-6">
+<% } else { %>
+<div class="col-md-4">
+<% } %>
+<h3>With this</h3>
+<textarea class="fullBox form-control" ondrop="drop(event)" ondragover="allowDrop(event)" id="src2">
+Amarendra Baahubali(Prabhas) and Bhalla Deva(Rana Daggubati) are cousins raised by the same mother, Sivagami(Ramya Krishnan) who is also the reigning Queen of Mahishmati.</textarea>
+</div>
+</div>
+<br/>
+<div class="col-md-12">
+  <center>
+    <div class="row">
+      <div class="col-md-3">
+        <label>Gram Size : </label>
+      </div>
+      <div class="col-md-3">
+        <input type="number" class="form-control" id="gram" value="2" />
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-success" id="chckplag">Check Plagarism</button>
+      </div>
+    </div>
+      <br/>
+      <span id="progress"> </span><br/>
+        <strong>levenshtein Plagarism: <span id="lplag"></span> </strong><br/>
+        <strong>FuzzySet Plagarism: <span id="splag"></span> </strong><br/>
+        <strong>FuzzySet similarity : <span id="dplag"></span> </strong>
+  </center>
+</div>
+
+

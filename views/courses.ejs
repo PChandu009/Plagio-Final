@@ -1,0 +1,101 @@
+<div id="editCourses" class="row">
+    <div class="col-md-12" id="editCourseForm">
+        <div class="jumbotron">
+            <div class="editCourseBlock">
+                <h4>
+                    <i class="fa fa-eye" aria-hidden="true"></i> View Courses</h4><hr/>
+                <div class="dash-line"></div>
+                <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>CRN</th>
+                    <th>Course</th>
+                    <th>Tri semester</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let i=0; i<Courses.length; i++ ) { %>
+                    <tr>
+                        <td>
+                            <%= Courses[i].crn %>
+                        </td>
+                        <td>
+                            <a href="/assignments/<%= Courses[i]._id %>"> <%= Courses[i].name %></a>
+                        </td>
+                        <td>
+                            <%=Courses[i].trisemester%>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("[id^='update-']").click(function (evt) {
+        evt.preventDefault();
+        $.ajax({
+            method: "POST",
+            url: "/admin/update-Course/" + evt.target.dataset.id,
+            data: $("#" + evt.target.dataset.id).serializeFormJSON()
+        })
+            .done(function (data) {
+                if (data.success) {
+                    console.log(data);
+                    bootbox.alert(data.message);
+
+                }
+                else {
+                    console.log(data);
+                    bootbox.alert(data.message);
+                }
+            });
+    });
+    $("[id^='delete-']").click(function (evt) {
+        evt.preventDefault();
+        $.ajax({
+            method: "POST",
+            url: "/admin/delete-screen/" + evt.target.dataset.id,
+            data: $("#" + evt.target.dataset.id).serializeFormJSON()
+        })
+            .done(function (data) {
+                if (data.success) {
+                    console.log(data);
+                    bootbox.alert(data.message);
+                    $("#" + evt.target.dataset.id).remove();
+                }
+                else {
+                    console.log(data);
+                    bootbox.alert(data.message);
+                }
+            });
+    });
+    $("#addCourse").click(function (evt) {
+        evt.preventDefault();
+        var newScreenDetails = $("#newCourseForm").serializeFormJSON();
+        console.log(newScreenDetails);
+        $.ajax({
+            method: "POST",
+            url: "/newCourse",
+            data: newScreenDetails
+        })
+            .done(function (data) {
+                if (data.success) {
+                    console.log(data);
+                    bootbox.alert(data.message, function () {
+                        location.href = "/courses";
+                    });
+                }
+                else {
+                    console.log(data);
+                    if (data.data.errmsg && data.data.code == 11000)
+                        bootbox.alert({ title: data.message, message: "Screen name already exists" });
+                    else
+                        bootbox.alert({ title: data.message, message: data.data.errmsg || data.data.message });
+                }
+            });
+    });
+
+</script>
